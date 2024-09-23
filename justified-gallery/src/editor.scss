@@ -1,0 +1,48 @@
+.dgwt-jg-gutenberg-preview {
+	width: 100%;
+}
+
+.wp-block.is-selected {
+	.dgwt-jg-gutenberg-disabled-preview-wrapper {
+		pointer-events: inherit !important;
+
+		.dgwt-jg-gutenberg-preview {
+			pointer-events: inherit !important;
+		}
+
+		.dgwt-jg-gutenberg-preview * {
+			pointer-events: inherit !important;
+		}
+
+		&::after {
+			display: none;
+		}
+	}
+}
+
+.dgwt-jg-gutenberg-upload-loader {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 40;
+
+	&__content {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 100%;
+		width: 100%;
+		display: flex;
+		background-color: #fff;
+		align-items: center;
+		justify-content: center;
+		z-index: 50;
+		text-align: center;
+		color: #fff;
+		opacity: 0.6;
+	}
+}
