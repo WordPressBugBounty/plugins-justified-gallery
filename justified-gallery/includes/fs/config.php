@@ -3,10 +3,8 @@
 /**
  * Create a helper function for easy SDK access.
  */
-function dgwt_freemius()
-{
-    global  $dgwt_freemius ;
-    
+function dgwt_freemius() {
+    global $dgwt_freemius;
     if ( !isset( $dgwt_freemius ) ) {
         // Include Freemius SDK.
         require_once dirname( __FILE__ ) . '/lib/start.php';
@@ -19,13 +17,12 @@ function dgwt_freemius()
             'has_addons'     => false,
             'has_paid_plans' => true,
             'menu'           => array(
-            'slug'    => 'dgwt_jg_settings',
-            'support' => false,
-        ),
+                'slug'    => 'dgwt_jg_settings',
+                'support' => false,
+            ),
             'is_live'        => true,
         ) );
     }
-    
     return $dgwt_freemius;
 }
 

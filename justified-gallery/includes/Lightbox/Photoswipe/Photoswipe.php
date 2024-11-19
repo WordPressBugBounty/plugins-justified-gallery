@@ -7,45 +7,43 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * PhotoSwipe integration
  */
-class DGWT_JG_Photoswipe extends DGWT_JG_Lightbox
-{
+class DGWT_JG_Photoswipe extends DGWT_JG_Lightbox {
     /**
      * @var array
      */
-    private  $opt = array() ;
+    private $opt = array();
+
     /**
      * Unique slug for the instance
      *
      * @var string
      */
-    public  $slug = 'Photoswipe' ;
-    public function __construct()
-    {
+    public $slug = 'Photoswipe';
+
+    public function __construct() {
         parent::__construct();
         $this->init();
     }
-    
-    private function init()
-    {
-        add_action( 'wp_footer', array( $this, 'include_modal' ), 90 );
-        add_action( 'admin_footer', array( $this, 'include_modal' ), 90 );
+
+    private function init() {
+        add_action( 'wp_footer', array($this, 'include_modal'), 90 );
+        add_action( 'admin_footer', array($this, 'include_modal'), 90 );
         add_filter(
             'dgwt/jg/gallery/tile_atts/lightbox=photoswipe',
-            array( $this, 'add_caption' ),
+            array($this, 'add_caption'),
             10,
             2
         );
-        add_filter( 'plugins_loaded', array( $this, 'prepare_settings' ) );
+        add_filter( 'plugins_loaded', array($this, 'prepare_settings') );
         if ( is_admin() ) {
-            new DGWT_JG_Photoswipe_Admin( $this->assets_url );
+            new DGWT_JG_Photoswipe_Admin($this->assets_url);
         }
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function include_libs()
-    {
+    public function include_libs() {
         if ( !$this->can_load() ) {
             return;
         }
@@ -57,28 +55,28 @@ class DGWT_JG_Photoswipe extends DGWT_JG_Lightbox
         wp_enqueue_script(
             'jquery-mousewheel',
             $this->assets_url . '/jquery.mousewheel.min.js',
-            array( 'jquery' ),
+            array('jquery'),
             DGWT_JG_VERSION,
             true
         );
         wp_enqueue_script(
             'dgwt-jg-photoswipe-ui',
             $this->assets_url . '/photoswipe-ui-default' . $min . '.js',
-            array( 'jquery', 'jquery-mousewheel' ),
+            array('jquery', 'jquery-mousewheel'),
             DGWT_JG_VERSION,
             true
         );
         wp_enqueue_script(
             'dgwt-jg-photoswipe',
             $this->assets_url . '/photoswipe' . $min . '.js',
-            array( 'dgwt-jg-photoswipe-ui' ),
+            array('dgwt-jg-photoswipe-ui'),
             DGWT_JG_VERSION,
             true
         );
         wp_enqueue_script(
             'dgwt-jg-jquery-photoswipe',
             $this->assets_url . '/jquery.photoswipe' . $min . '.js',
-            array( 'dgwt-jg-photoswipe' ),
+            array('dgwt-jg-photoswipe'),
             DGWT_JG_VERSION,
             true
         );
@@ -98,48 +96,44 @@ class DGWT_JG_Photoswipe extends DGWT_JG_Lightbox
             );
         }
     }
-    
+
     /**
      * Add HTML Attributes to images link to view description etc.
      *
      * @param array  $atts
      * @param object $attachment
      */
-    public function add_caption( $atts, $attachment )
-    {
+    public function add_caption( $atts, $attachment ) {
         if ( 'attachment' !== get_post_type( $attachment ) ) {
             return $atts;
         }
         $label = ( trim( $attachment->post_excerpt ) ? wp_strip_all_tags( wptexturize( $attachment->post_excerpt ) ) : '' );
         $desc = ( trim( $attachment->post_content ) ? wp_kses_post( wptexturize( $attachment->post_content ) ) : '' );
-        $desc = str_replace( '"', '\\"', $desc );
         $sub_html = '';
-        if ( !empty($label) ) {
+        if ( !empty( $label ) ) {
             $sub_html = "<h4>{$label}</h4>";
         }
-        if ( !empty($desc) ) {
+        if ( !empty( $desc ) ) {
             $sub_html = "<div class=\"dgwt-jg-item-desc\">{$desc}</div>";
         }
         $atts['data-sub-html'] = esc_attr( $sub_html );
         return $atts;
     }
-    
+
     /**
      * Include photoshwipe modal HTML
      */
-    public function include_modal()
-    {
+    public function include_modal() {
         if ( !$this->can_load() ) {
             return;
         }
         include_once $this->dir . '/photoswipe-modal.php';
     }
-    
+
     /**
      * Init PhotoSwipe
      */
-    public function gallery_js()
-    {
+    public function gallery_js() {
         ?>
 		<script type="text/javascript">
 			( function ($) {
@@ -181,14 +175,19 @@ class DGWT_JG_Photoswipe extends DGWT_JG_Lightbox
 		</script>
 		<?php 
     }
-    
+
     /**
      * Prepare settings
      * null
      */
-    public function prepare_settings()
-    {
+    public function prepare_settings() {
         $this->opt = apply_filters( 'dgwt/jg/photoswipe/options', $this->opt );
+    }
+
+    public function add_css_style() {
+        if ( !$this->can_load() ) {
+            return;
+        }
     }
 
 }

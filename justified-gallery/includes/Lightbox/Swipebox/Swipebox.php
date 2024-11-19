@@ -7,56 +7,54 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Swipebox integration
  */
-class DGWT_JG_Swipebox extends DGWT_JG_Lightbox
-{
+class DGWT_JG_Swipebox extends DGWT_JG_Lightbox {
     /**
      * @var array
      */
-    private  $opt = array() ;
+    private $opt = array();
+
     /**
      * Unique slug for the instance
      *
      * @var string
      */
-    public  $slug = 'Swipebox' ;
+    public $slug = 'Swipebox';
+
     /**
      * Swipebox constructor.
      */
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->init();
     }
-    
-    public function init()
-    {
+
+    public function init() {
         add_filter(
             'dgwt/jg/gallery/tile_atts/lightbox=swipebox',
-            array( $this, 'add_figure_atts' ),
+            array($this, 'add_figure_atts'),
             10,
             2
         );
         add_filter(
             'dgwt/jg/gallery/link_atts/lightbox=swipebox',
-            array( $this, 'add_link_atts' ),
+            array($this, 'add_link_atts'),
             10,
             4
         );
-        add_filter( 'plugins_loaded', array( $this, 'prepare_settings' ) );
+        add_filter( 'plugins_loaded', array($this, 'prepare_settings') );
         if ( is_admin() ) {
-            new DGWT_JG_Swipebox_Admin( $this->assets_url );
+            new DGWT_JG_Swipebox_Admin($this->assets_url);
         }
     }
-    
-    public function include_libs()
-    {
+
+    public function include_libs() {
         if ( !$this->can_load() ) {
             return;
         }
         wp_enqueue_script(
             'dgwt-jg-swipebox',
             $this->assets_url . '/js/jquery.swipebox.min.js',
-            array( 'jquery' ),
+            array('jquery'),
             DGWT_JG_VERSION,
             true
         );
@@ -67,26 +65,23 @@ class DGWT_JG_Swipebox extends DGWT_JG_Lightbox
             DGWT_JG_VERSION
         );
     }
-    
+
     /**
      * Add an HTML attributes to the <figure> element
      *
      * @param array  $atts
      * @param object $attachment
      */
-    public function add_figure_atts( $atts, $attachment )
-    {
-        
+    public function add_figure_atts( $atts, $attachment ) {
         if ( DGWT_JG()->settings->get_opt( 'description' ) === 'show' ) {
             $title = DGWT_JG_Helpers::get_image_caption( $attachment );
-            if ( !empty($title) ) {
+            if ( !empty( $title ) ) {
                 $atts['title'] = wp_strip_all_tags( $title );
             }
         }
-        
         return $atts;
     }
-    
+
     /**
      * Add an HTML attributes to the <a> element
      *
@@ -100,17 +95,15 @@ class DGWT_JG_Swipebox extends DGWT_JG_Lightbox
         $attachment,
         $gallery_atts,
         $instance
-    )
-    {
+    ) {
         $atts['rel'] = 'dgwt-jg-swipebox-' . $instance;
         return $atts;
     }
-    
+
     /**
      * Init Swipebox
      */
-    public function gallery_js()
-    {
+    public function gallery_js() {
         ?>
 		<script type="text/javascript">
 			( function ($) {
@@ -122,10 +115,10 @@ class DGWT_JG_Swipebox extends DGWT_JG_Lightbox
 						$item.swipebox({
 							<?php 
         // delay before hiding bars on desktop
-        echo  'hideBarsDelay:' . esc_js( $this->opt['hideBarsDelay'] ) . ',' ;
-        echo  'loopAtEnd:' . esc_js( $this->opt['loopAtEnd'] ) . ',' ;
-        echo  'removeBarsOnMobile:' . esc_js( $this->opt['removeBarsOnMobile'] ) . ',' ;
-        echo  'hideCloseButtonOnMobile:' . esc_js( $this->opt['hideCloseButtonOnMobile'] ) ;
+        echo 'hideBarsDelay:' . esc_js( $this->opt['hideBarsDelay'] ) . ',';
+        echo 'loopAtEnd:' . esc_js( $this->opt['loopAtEnd'] ) . ',';
+        echo 'removeBarsOnMobile:' . esc_js( $this->opt['removeBarsOnMobile'] ) . ',';
+        echo 'hideCloseButtonOnMobile:' . esc_js( $this->opt['hideCloseButtonOnMobile'] );
         ?>
 						});
 					}
@@ -134,13 +127,11 @@ class DGWT_JG_Swipebox extends DGWT_JG_Lightbox
 		</script>
 		<?php 
     }
-    
+
     /**
      * Prepare settings
      */
-    public function prepare_settings()
-    {
-        
+    public function prepare_settings() {
         if ( !dgwt_freemius()->is_premium() ) {
             $this->opt['hideBarsDelay'] = 3000;
             $this->opt['loopAtEnd'] = 'false';
@@ -148,7 +139,6 @@ class DGWT_JG_Swipebox extends DGWT_JG_Lightbox
             $this->opt['hideCloseButtonOnMobile'] = 'false';
             $this->opt['caption'] = false;
         }
-    
     }
 
 }

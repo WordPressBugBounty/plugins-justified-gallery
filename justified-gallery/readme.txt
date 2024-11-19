@@ -2,9 +2,9 @@
 Contributors: matczar, damian-gora
 Tags: best gallery plugin, wordpress gallery, justified gallery, gallery grid, gutenberg block
 Requires at least: 4.6
-Tested up to: 6.2
+Tested up to: 6.7
 Requires PHP: 5.4
-Stable tag: 1.8.1
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,15 @@ If you are eg a **photographer** and publish **large galleries (+50 photos per p
 
 == Changelog ==
 
+= 1.9.0, November 18, 2024 =
+* ADD: Ability to set background and text color in the gallery preview
+* ADD: Ability to limit the number of images in the gallery preview
+* FIX: Unwanted image cropping when max row height is set to -1
+* FIX: Incorrect display of links in the description in Photoswipe lightbox
+* FIX: Deprecation warning when editing a gallery in the block editor
+* TWEAK: Stop using a server-side mobile device recognition library
+* UPDATE: Freemius SDK v2.9.0
+
 = 1.8.1, July 08, 2023 =
 * FIX: Incorrect image caption background color for Layla tile style
 
@@ -86,7 +95,6 @@ If you are eg a **photographer** and publish **large galleries (+50 photos per p
 * FIX: Ensure that plugin notices are closed by the current user
 * UPDATE: Justified Gallery library v3.8.1
 * UPDATE: Freemius SDK v2.5.10
-
 
 = 1.7.3, January 11, 2023 =
 * FIX: Plugin security enhancements and code-related best practices

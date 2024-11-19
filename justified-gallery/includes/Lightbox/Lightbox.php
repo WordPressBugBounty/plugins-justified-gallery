@@ -7,70 +7,67 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Class DGWT_JG_Lightbox
  */
-abstract class DGWT_JG_Lightbox
-{
+abstract class DGWT_JG_Lightbox {
     /**
      * A implementation ID
      * Should be overwritten in the implementation
      *
      * @var string
      */
-    protected  $slug = '' ;
+    protected $slug = '';
+
     /**
      * Absolute server path to a implementation root.
      *
      * @var string
      */
-    protected  $dir = '' ;
+    protected $dir = '';
+
     /**
      * Absolute URL to assets for a implementation
      *
      * @var string
      */
-    protected  $assets_url = '' ;
-    public function __construct()
-    {
+    protected $assets_url = '';
+
+    public function __construct() {
         $this->dir = dirname( __FILE__ ) . '/' . $this->slug;
         $this->assets_url = DGWT_JG_URL . 'includes/Lightbox/' . $this->slug . '/assets';
         $this->load();
     }
-    
+
     /**
      * Add actions or filters
      */
-    private function load()
-    {
-        add_action( 'wp_footer', array( $this, 'include_libs' ), 5 );
-        add_action( 'wp_footer', array( $this, 'gallery_init' ), 90 );
-        add_action( 'admin_footer', array( $this, 'include_libs' ), 5 );
-        add_action( 'admin_footer', array( $this, 'gallery_init' ), 90 );
+    private function load() {
+        add_action( 'wp_footer', array($this, 'include_libs'), 5 );
+        add_action( 'wp_footer', array($this, 'gallery_init'), 90 );
+        add_action( 'admin_footer', array($this, 'include_libs'), 5 );
+        add_action( 'admin_footer', array($this, 'gallery_init'), 90 );
     }
-    
+
     /**
      * Place to write raw JS which initiates Lightbox
      * Should be overwritten in the implementation
      *
      * @return void
      */
-    public function gallery_js()
-    {
+    public function gallery_js() {
     }
-    
+
     /**
      * Include CSS and JS libraries
      * Should be overwritten in the implementation
      */
-    public function include_libs()
-    {
+    public function include_libs() {
     }
-    
+
     /**
      * Print JS
      *
      * @return void
      */
-    public function gallery_init()
-    {
+    public function gallery_init() {
         if ( !$this->can_load() ) {
             return;
         }
@@ -80,16 +77,18 @@ abstract class DGWT_JG_Lightbox
         }
         $js = DGWT_JG_Helpers::minify_js( ob_get_clean() );
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo  $js ;
+        echo $js;
+        if ( method_exists( $this, 'add_css_style' ) ) {
+            $this->add_css_style();
+        }
     }
-    
+
     /**
      * Check if can load resources
      *
      * @return bool
      */
-    protected function can_load()
-    {
+    protected function can_load() {
         $load_on_frontend = in_array( strtolower( $this->slug ), DGWT_JG()->gallery->get_lightboxes_to_load(), true );
         $load_on_backend = DGWT_JG_Helpers::is_settings_page();
         return $load_on_frontend || $load_on_backend;

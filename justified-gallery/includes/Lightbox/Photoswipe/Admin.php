@@ -124,6 +124,15 @@ class DGWT_JG_Photoswipe_Admin {
 			'default' => '100',
 		);
 
+		$settings[]  = array(
+			'name'    => 'photoswipe_disable_zoom',
+			'label'   => __( 'Disable zoom', 'justified-gallery' ),
+			'desc'    => __( 'Disable the ability to zoom in on a photo after opening a lightbox.', 'justified-gallery' ),
+			'type'    => 'checkbox',
+			'class'   => 'dgwt-jg-premium-only opt-photoswipe',
+			'default' => '',
+		);
+
 		return $settings;
 	}
 

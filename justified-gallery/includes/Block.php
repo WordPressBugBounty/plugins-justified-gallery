@@ -59,6 +59,11 @@ class DGWT_JG_Block {
 					$normalizedAttributes        = array();
 					$normalizedAttributes['ids'] = implode( ',', $ids );
 
+					$previewLimit        = defined( 'DGWT_JG_PREVIEW_LIMIT' ) && intval( DGWT_JG_PREVIEW_LIMIT ) > 0 ? intval( DGWT_JG_PREVIEW_LIMIT ) : - 1;
+					$previewBgColor      = defined( 'DGWT_JG_PREVIEW_BACKGROUND_COLOR' ) && ! empty( DGWT_JG_PREVIEW_BACKGROUND_COLOR ) ? DGWT_JG_PREVIEW_BACKGROUND_COLOR : '';
+					$previewTextColor    = defined( 'DGWT_JG_PREVIEW_TEXT_COLOR' ) && ! empty( DGWT_JG_PREVIEW_TEXT_COLOR ) ? DGWT_JG_PREVIEW_TEXT_COLOR : '';
+					$previewLimitEnabled = isset( $_GET['previewLimit'] );
+
 					if ( isset( $_GET['hover'] ) && in_array(
 						$_GET['hover'],
 						array(
@@ -85,6 +90,9 @@ class DGWT_JG_Block {
 					) ) {
 						$normalizedAttributes['lastrow'] = sanitize_key( $_GET['lastrow'] );
 					}
+					if ( $previewLimitEnabled && $previewLimit > 5 ) {
+						$normalizedAttributes['lastrow'] = 'hide';
+					}
 
 					if ( isset( $_GET['margin'] ) && intval( $_GET['margin'] ) > 0 ) {
 						$normalizedAttributes['margin'] = intval( $_GET['margin'] );
@@ -106,6 +114,37 @@ class DGWT_JG_Block {
 				<body>
 					<?php
 					echo do_shortcode( '[gallery lightbox="none" link="none" ' . $this->getAttributesString( $normalizedAttributes ) . ']' );
+						?>
+						<style>
+							.dgwt-jg-gallery {
+							<?php if ( !empty($previewBgColor)) { ?> --dgwt-jg-preview-background: <?php echo esc_attr($previewBgColor); ?>;
+							<?php } ?> <?php if ( !empty($previewTextColor)) { ?> --dgwt-jg-preview-text: <?php echo esc_attr($previewTextColor); ?>;
+							<?php } ?> background-color: var(--dgwt-jg-preview-background, var(--wp--preset--color--base, rgb(255, 255, 255)));;
+							}
+
+							<?php if ( $previewLimitEnabled && $previewLimit > 0 ) {
+								$previewLimitText = sprintf( _n( 'Gallery preview is limited to maximum %d image.', 'Gallery preview is limited to maximum %d images.', $previewLimit, 'justified-gallery' ), $previewLimit );
+								?>
+							.dgwt-jg-gallery::after {
+								content: "<?php echo esc_attr($previewLimitText); ?>";
+								position: absolute;
+								left: 0;
+								bottom: 0;
+								width: 100%;
+								height: 150px;
+								background: var(--dgwt-jg-preview-background, var(--wp--preset--color--base, rgb(255, 255, 255)));
+								background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, var(--dgwt-jg-preview-background, var(--wp--preset--color--base, rgb(255, 255, 255))) 85%, var(--dgwt-jg-preview-background, var(--wp--preset--color--base, rgb(255, 255, 255))) 100%);
+								z-index: 100;
+								display: flex;
+								color: var(--dgwt-jg-preview-text, var(--wp--preset--color--contrast, #000));
+								align-items: flex-end;
+								justify-content: center;
+								font-size: 0.8em;
+							}
+
+							<?php } ?>
+						</style>
+						<?php
 					wp_footer()
 					?>
 				</body>
@@ -164,7 +203,8 @@ class DGWT_JG_Block {
 		);
 
 		$block_data = array(
-			'previewURL' => add_query_arg( array( self::PREVIEW_KEY => 'active' ), home_url() ),
+			'previewURL'   => add_query_arg( array( self::PREVIEW_KEY => 'active' ), home_url() ),
+			'previewLimit' => defined( 'DGWT_JG_PREVIEW_LIMIT' ) && intval( DGWT_JG_PREVIEW_LIMIT ) > 0 ? intval( DGWT_JG_PREVIEW_LIMIT ) : - 1,
 		);
 
 		$block_data['previewURL'] = wp_nonce_url(

@@ -3,7 +3,7 @@
  * Plugin Name: Justified Gallery
  * Plugin URI: https://wordpress.org/plugins/justified-gallery
  * Description: Display native WordPress galleries in a responsive justified image grid and a pretty Lightbox.
- * Version: 1.8.1
+ * Version: 1.9.0
  * Author: Mateusz Czardybon
  * Author URI: https://czarsoft.pl/
  * Text Domain: justified-gallery
@@ -24,7 +24,6 @@ if ( ! function_exists( 'dgwt_freemius' ) ) {
 		final class DGWT_JG_Core {
 
 			private static $instance;
-			public $detector;
 			public $settings;
 			/** @var DGWT_JG_Gallery */
 			public $gallery;
@@ -46,7 +45,6 @@ if ( ! function_exists( 'dgwt_freemius' ) ) {
 					self::$instance->includes();
 					self::$instance->hooks();
 
-					self::$instance->detector   = new DGWT_JG_MobileDetect();
 					self::$instance->settings   = new DGWT_JG_Settings();
 					self::$instance->gallery    = new DGWT_JG_Gallery();
 					self::$instance->lightbox   = new DGWT_JG_Lightbox_Loader();
@@ -94,7 +92,7 @@ if ( ! function_exists( 'dgwt_freemius' ) ) {
 			 * Setup plugin constants
 			 */
 			private function constants() {
-				define( 'DGWT_JG_VERSION', '1.8.1' );
+				define( 'DGWT_JG_VERSION', '1.9.0' );
 				define( 'DGWT_JG_NAME', 'Justified Gallery' );
 				define( 'DGWT_JG_FILE', __FILE__ );
 				define( 'DGWT_JG_DIR', plugin_dir_path( __FILE__ ) );
@@ -109,7 +107,6 @@ if ( ! function_exists( 'dgwt_freemius' ) ) {
 			 */
 			public function includes() {
 				require_once DGWT_JG_DIR . 'includes/Utils/Helpers.php';
-				require_once DGWT_JG_DIR . 'includes/Utils/MobileDetect.php';
 				require_once DGWT_JG_DIR . 'includes/Install.php';
 				require_once DGWT_JG_DIR . 'includes/admin/settings/SettingsApi.php';
 				require_once DGWT_JG_DIR . 'includes/admin/settings/Settings.php';

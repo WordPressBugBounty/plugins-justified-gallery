@@ -4,40 +4,39 @@
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
-class DGWT_JG_Gallery
-{
+class DGWT_JG_Gallery {
     /**
      * Store array with options
      *
      * @var array
      */
-    public  $options ;
-    public  $active_lightboxes = array() ;
-    public  $active_hovers = array() ;
-    public function __construct()
-    {
+    public $options;
+
+    public $active_lightboxes = array();
+
+    public $active_hovers = array();
+
+    public function __construct() {
         $this->set_options();
-        add_action( 'template_redirect', array( $this, 'maybe_run_gallery' ), 5 );
-        add_action( 'admin_init', array( $this, 'maybe_run_gallery' ) );
+        add_action( 'template_redirect', array($this, 'maybe_run_gallery'), 5 );
+        add_action( 'admin_init', array($this, 'maybe_run_gallery') );
     }
-    
-    public function maybe_run_gallery()
-    {
+
+    public function maybe_run_gallery() {
         add_filter(
             'post_gallery',
-            array( $this, 'post_gallery' ),
+            array($this, 'post_gallery'),
             15,
             3
         );
-        add_action( 'wp_footer', array( $this, 'init_gallery' ), 4 );
-        add_action( 'admin_footer', array( $this, 'init_gallery' ), 4 );
+        add_action( 'wp_footer', array($this, 'init_gallery'), 4 );
+        add_action( 'admin_footer', array($this, 'init_gallery'), 4 );
     }
-    
+
     /**
      * Set options
      */
-    public function set_options()
-    {
+    public function set_options() {
         $this->options = array(
             'show_desc'      => ( DGWT_JG()->settings->get_opt( 'description' ) === 'hide' ? false : true ),
             'last_row'       => self::get_last_row_behaviour(),
@@ -47,15 +46,14 @@ class DGWT_JG_Gallery
             'max_row_height' => intval( DGWT_JG()->settings->get_opt( 'max_row_height' ) ),
         );
     }
-    
+
     /**
      * Get the last row behaviour
      *
      * @parram string last_row option
      * @return string by default: nojustify
      */
-    public static function get_last_row_behaviour( $last_row = '' )
-    {
+    public static function get_last_row_behaviour( $last_row = '' ) {
         $white_list = array(
             'justify',
             'nojustify',
@@ -63,43 +61,37 @@ class DGWT_JG_Gallery
             'right',
             'center'
         );
-        
-        if ( !empty($last_row) ) {
+        if ( !empty( $last_row ) ) {
             $opt = $last_row;
         } else {
             $opt = DGWT_JG()->settings->get_opt( 'last_row' );
         }
-        
-        
-        if ( empty($opt) || !in_array( $opt, $white_list, true ) ) {
+        if ( empty( $opt ) || !in_array( $opt, $white_list, true ) ) {
             $last_row = 'nojustify';
         } else {
             $last_row = $opt;
         }
-        
         return $last_row;
     }
-    
+
     /**
      * List lightboxes to load
      *
      * @return array
      */
-    public function get_lightboxes_to_load()
-    {
+    public function get_lightboxes_to_load() {
         return $this->active_lightboxes;
     }
-    
+
     /**
      * List hover effects to load
      *
      * @return array
      */
-    public function get_hovers_to_load()
-    {
+    public function get_hovers_to_load() {
         return $this->active_hovers;
     }
-    
+
     /**
      * Remodel the default gallery shortcode output to compatible with the Justified Gallery.
      *
@@ -113,20 +105,19 @@ class DGWT_JG_Gallery
      * @param array  $attr Attributes of the gallery shortcode.
      * @param int    $instance Unique numeric ID of this gallery shortcode instance.
      */
-    public function post_gallery( $output, $attr, $instance = 0 )
-    {
-        global  $dgwt_jg_progress, $dgwt_jg_lightboxes, $dgwt_jg_hovers ;
+    public function post_gallery( $output, $attr, $instance = 0 ) {
+        global $dgwt_jg_progress, $dgwt_jg_lightboxes, $dgwt_jg_hovers;
         $dgwt_jg_progress = true;
         // Use bypass
         if ( isset( $attr['bypass'] ) ) {
             return $output;
         }
         $output = '';
-        $lightbox = ( !empty($attr['lightbox']) ? strtolower( sanitize_text_field( $attr['lightbox'] ) ) : strtolower( DGWT_JG()->settings->get_opt( 'lightbox', 'none' ) ) );
-        if ( !in_array( $lightbox, array( 'none', 'swipebox', 'photoswipe' ), true ) ) {
+        $lightbox = ( !empty( $attr['lightbox'] ) ? strtolower( sanitize_text_field( $attr['lightbox'] ) ) : strtolower( DGWT_JG()->settings->get_opt( 'lightbox', 'none' ) ) );
+        if ( !in_array( $lightbox, array('none', 'swipebox', 'photoswipe'), true ) ) {
             $lightbox = 'none';
         }
-        $hover_effect = ( !empty($attr['hover']) ? strtolower( sanitize_text_field( $attr['hover'] ) ) : strtolower( DGWT_JG()->settings->get_opt( 'tiles_style', 'none' ) ) );
+        $hover_effect = ( !empty( $attr['hover'] ) ? strtolower( sanitize_text_field( $attr['hover'] ) ) : strtolower( DGWT_JG()->settings->get_opt( 'tiles_style', 'none' ) ) );
         $hover_effect = ( $hover_effect === 'JGStandard' || $hover_effect === 'jg_standard' ? 'standard' : $hover_effect );
         if ( !in_array( $hover_effect, array(
             'none',
@@ -136,15 +127,14 @@ class DGWT_JG_Gallery
         ), true ) ) {
             $hover_effect = 'none';
         }
-        if ( !empty($attr['link']) && $attr['link'] === 'none' ) {
+        if ( !empty( $attr['link'] ) && $attr['link'] === 'none' ) {
             $lightbox = 'none';
         }
-        $is_lightbox = !empty($lightbox) && $lightbox !== 'none';
-        $is_hover = !empty($hover_effect) && $hover_effect !== 'none';
+        $is_lightbox = !empty( $lightbox ) && $lightbox !== 'none';
+        $is_hover = !empty( $hover_effect ) && $hover_effect !== 'none';
         $post = get_post();
         do_action( 'dgwt/jg/gallery/shortcode/start', $attr, $instance );
         $attr = apply_filters( 'dgwt/jg/gallery/attr', $attr );
-        
         if ( $is_lightbox ) {
             do_action( 'dgwt/jg/gallery/shortcode/start/lightbox=' . $lightbox, $attr, $instance );
             $attr = apply_filters( 'dgwt/jg/gallery/attr/lightbox=' . $lightbox, $attr );
@@ -152,8 +142,6 @@ class DGWT_JG_Gallery
                 $this->active_lightboxes[] = $lightbox;
             }
         }
-        
-        
         if ( $is_hover ) {
             do_action( 'dgwt/jg/gallery/shortcode/start/hover=' . $hover_effect, $attr, $instance );
             $attr = apply_filters( 'dgwt/jg/gallery/attr/hover=' . $hover_effect, $attr );
@@ -161,7 +149,6 @@ class DGWT_JG_Gallery
                 $this->active_hovers[] = $hover_effect;
             }
         }
-        
         $atts = shortcode_atts( array(
             'order'        => 'ASC',
             'orderby'      => 'menu_order ID',
@@ -180,8 +167,7 @@ class DGWT_JG_Gallery
             'hover'        => $hover_effect,
         ), $attr, 'gallery' );
         $id = intval( $atts['id'] );
-        
-        if ( !empty($atts['include']) ) {
+        if ( !empty( $atts['include'] ) ) {
             $_attachments = get_posts( array(
                 'include'        => $atts['include'],
                 'post_status'    => 'inherit',
@@ -194,8 +180,7 @@ class DGWT_JG_Gallery
             foreach ( $_attachments as $key => $val ) {
                 $attachments[$val->ID] = $_attachments[$key];
             }
-        } elseif ( !empty($atts['exclude']) ) {
-            
+        } elseif ( !empty( $atts['exclude'] ) ) {
             if ( $id === -1 ) {
                 $attachments = array();
             } else {
@@ -209,9 +194,7 @@ class DGWT_JG_Gallery
                     'orderby'        => $atts['orderby'],
                 ) );
             }
-        
         } else {
-            
             if ( $id === -1 ) {
                 $attachments = array();
             } else {
@@ -224,23 +207,18 @@ class DGWT_JG_Gallery
                     'orderby'        => $atts['orderby'],
                 ) );
             }
-        
         }
-        
         // There are no attachments, return empty value
-        if ( empty($attachments) && empty($atts['demo']) ) {
+        if ( empty( $attachments ) && empty( $atts['demo'] ) ) {
             return $output;
         }
-        
-        if ( !empty($atts['demo']) ) {
+        if ( !empty( $atts['demo'] ) ) {
             $attachments = array();
-            for ( $i = 0 ;  $i < 3 ;  $i++ ) {
+            for ($i = 0; $i < 3; $i++) {
                 $attachments[$i] = new stdClass();
                 $attachments[$i]->ID = 0;
             }
         }
-        
-        
         if ( is_feed() ) {
             $output = "\n";
             foreach ( $attachments as $att_id => $attachment ) {
@@ -248,18 +226,23 @@ class DGWT_JG_Gallery
             }
             return $output;
         }
-        
         $selector = 'dgwt-jg-' . absint( $instance );
-        $fancybox_class = ( !empty($lightbox) ? ' dgwt-jg-lightbox-' . $lightbox : '' );
-        $hover_class = ( !empty($lightbox) ? ' dgwt-jg-effect-' . $hover_effect : '' );
+        $fancybox_class = ( !empty( $lightbox ) ? ' dgwt-jg-lightbox-' . $lightbox : '' );
+        $hover_class = ( !empty( $lightbox ) ? ' dgwt-jg-effect-' . $hover_effect : '' );
         $gallery_atts = array(
             'class'               => 'dgwt-jg-gallery ' . $selector . $fancybox_class . $hover_class,
             'data-last_row'       => self::get_last_row_behaviour( $atts['lastrow'] ),
-            'data-margin'         => ( !empty($atts['margin']) ? absint( $atts['margin'] ) : $this->options['margin'] ),
+            'data-margin'         => ( !empty( $atts['margin'] ) ? absint( $atts['margin'] ) : $this->options['margin'] ),
             'data-border'         => ( $atts['border'] !== -1 ? intval( $atts['border'] ) : $this->options['border'] ),
-            'data-row_height'     => ( !empty($atts['rowheight']) ? intval( $atts['rowheight'] ) : $this->options['row_height'] ),
-            'data-max_row_height' => ( !empty($atts['maxrowheight']) ? absint( $atts['maxrowheight'] ) : $this->options['max_row_height'] ),
+            'data-row_height'     => ( !empty( $atts['rowheight'] ) ? intval( $atts['rowheight'] ) : $this->options['row_height'] ),
+            'data-max_row_height' => ( !empty( $atts['maxrowheight'] ) ? intval( $atts['maxrowheight'] ) : $this->options['max_row_height'] ),
         );
+        if ( !isset( $gallery_atts['data-max_row_height'] ) || $gallery_atts['data-max_row_height'] < 0 ) {
+            $gallery_atts['data-max_row_height'] = 9999;
+        }
+        if ( !isset( $gallery_atts['data-max_row_height_mobile'] ) || $gallery_atts['data-max_row_height_mobile'] < 0 ) {
+            $gallery_atts['data-max_row_height_mobile'] = 9999;
+        }
         $gallery_atts = apply_filters( 'dgwt/jg/gallery/atts', $gallery_atts, $instance );
         if ( $is_lightbox ) {
             $gallery_atts = apply_filters( 'dgwt/jg/gallery/atts/lightbox=' . $lightbox, $gallery_atts, $instance );
@@ -275,15 +258,12 @@ class DGWT_JG_Gallery
             );
             // data-size attr
             $meta = wp_get_attachment_metadata( $attachment->ID );
-            
-            if ( !empty($meta['width']) ) {
+            if ( !empty( $meta['width'] ) ) {
                 $size = $meta['width'] . 'x' . $meta['height'];
                 $figure_atts['data-size'] = $size;
             }
-            
             $image_link = get_permalink( $attachment->ID );
-            
-            if ( !empty($atts['link']) ) {
+            if ( !empty( $atts['link'] ) ) {
                 if ( $atts['link'] === 'file' ) {
                     $image_link = wp_get_attachment_url( $attachment->ID );
                 }
@@ -295,7 +275,6 @@ class DGWT_JG_Gallery
                     $image_link = wp_get_attachment_url( $attachment->ID );
                 }
             }
-            
             $figure_atts = apply_filters(
                 'dgwt/jg/gallery/tile_atts',
                 $figure_atts,
@@ -339,12 +318,12 @@ class DGWT_JG_Gallery
                     $image_counter
                 );
             }
-            if ( !empty($link_atts['href']) ) {
+            if ( !empty( $link_atts['href'] ) ) {
                 $output .= '<a ' . DGWT_JG_Helpers::get_html_atts( $link_atts ) . '>';
             }
             $html_img = '';
             $meta = wp_get_attachment_metadata( $attachment->ID, true );
-            if ( !empty($meta['width']) && !empty($meta['height']) ) {
+            if ( !empty( $meta['width'] ) && !empty( $meta['height'] ) ) {
                 $html_img = self::wp_get_attachment_image(
                     $img_id,
                     $atts['size'],
@@ -396,7 +375,7 @@ class DGWT_JG_Gallery
                 );
             }
             $output .= $tile_caption;
-            if ( !empty($image_link) ) {
+            if ( !empty( $image_link ) ) {
                 $output .= '</a>';
             }
             $output .= '</figure>';
@@ -413,18 +392,16 @@ class DGWT_JG_Gallery
         $dgwt_jg_progress = false;
         return $output;
     }
-    
+
     public static function wp_get_attachment_image(
         $attachment_id,
         $size,
         $img_width,
         $img_height,
         $attr = array()
-    )
-    {
+    ) {
         $html = '';
         $image = wp_get_attachment_image_src( $attachment_id, $size );
-        
         if ( $image ) {
             list( $src, $width, $height ) = $image;
             $img_tag_open = '<img';
@@ -434,12 +411,10 @@ class DGWT_JG_Gallery
             );
             $attr = apply_filters( 'dgwt/jg/gallery/img/atts', wp_parse_args( $attr, $default_attr ) );
             // Generate 'srcset' and 'sizes' if not already present.
-            
-            if ( empty($attr['srcset']) ) {
+            if ( empty( $attr['srcset'] ) ) {
                 $image_meta = wp_get_attachment_metadata( $attachment_id );
-                
                 if ( is_array( $image_meta ) ) {
-                    $size_array = array( absint( $width ), absint( $height ) );
+                    $size_array = array(absint( $width ), absint( $height ));
                     $srcset = wp_calculate_image_srcset(
                         $size_array,
                         $src,
@@ -452,18 +427,14 @@ class DGWT_JG_Gallery
                         $image_meta,
                         $attachment_id
                     );
-                    
-                    if ( $srcset && ($sizes || !empty($attr['sizes'])) ) {
+                    if ( $srcset && ($sizes || !empty( $attr['sizes'] )) ) {
                         $attr['srcset'] = $srcset;
-                        if ( empty($attr['sizes']) ) {
+                        if ( empty( $attr['sizes'] ) ) {
                             $attr['sizes'] = $sizes;
                         }
                     }
-                
                 }
-            
             }
-            
             $attr = array_map( 'esc_attr', $attr );
             $html = $img_tag_open;
             foreach ( $attr as $name => $value ) {
@@ -471,34 +442,30 @@ class DGWT_JG_Gallery
                     $name = 'data-jg-srcset';
                 }
                 // Srcset is not available? Try to use full size.
-                
-                if ( (empty($attr['srcset']) || empty($attr['sizes'])) && $name === 'src' ) {
+                if ( (empty( $attr['srcset'] ) || empty( $attr['sizes'] )) && $name === 'src' ) {
                     $image = wp_get_attachment_image_src( $attachment_id, 'full' );
-                    if ( !empty($image[0]) ) {
+                    if ( !empty( $image[0] ) ) {
                         $value = $image[0];
                     }
                 }
-                
-                if ( !empty($value) ) {
+                if ( !empty( $value ) ) {
                     $html .= " {$name}=" . '"' . $value . '"';
                 }
             }
             $html .= ' />';
         }
-        
-        if ( !empty($html) && !defined( 'DGWT_JG_DISPLAYED' ) ) {
+        if ( !empty( $html ) && !defined( 'DGWT_JG_DISPLAYED' ) ) {
             define( 'DGWT_JG_DISPLAYED', true );
         }
         return $html;
     }
-    
+
     /**
      * Inject JavaScript code to init Justified Gallery
      *
      * @return void
      */
-    public function init_gallery()
-    {
+    public function init_gallery() {
         if ( !DGWT_JG_Helpers::can_display_jg() ) {
             return;
         }
@@ -591,7 +558,7 @@ class DGWT_JG_Gallery
 			);
 		</script>
 		<?php 
-        $script = str_replace( array( '<script>', '</script>' ), array( '', '' ), DGWT_JG_Helpers::minify_js( ob_get_clean() ) );
+        $script = str_replace( array('<script>', '</script>'), array('', ''), DGWT_JG_Helpers::minify_js( ob_get_clean() ) );
         wp_add_inline_script( 'dgwt-justified-gallery', $script );
     }
 

@@ -7,38 +7,30 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Tiles style: Layla
  */
-class DGWT_JG_TilesStyle_Layla extends DGWT_JG_TilesStyle
-{
-    public  $slug = 'Layla' ;
-    public function __construct()
-    {
+class DGWT_JG_TilesStyle_Layla extends DGWT_JG_TilesStyle {
+    public $slug = 'Layla';
+
+    public function __construct() {
         parent::__construct();
         $this->init();
     }
-    
-    private function init()
-    {
-        
-        if ( !DGWT_JG()->detector->isMobile() && !DGWT_JG()->detector->isTablet() ) {
-            add_filter(
-                'dgwt/jg/gallery/tile_caption/hover=layla',
-                array( $this, 'get_caption_html' ),
-                10,
-                2
-            );
-            
-            if ( !dgwt_freemius()->is_premium() ) {
-                add_action( 'wp_footer', array( $this, 'add_css_style' ), 95 );
-                add_action( 'admin_footer', array( $this, 'add_css_style' ), 95 );
-            }
-        
+
+    private function init() {
+        add_filter(
+            'dgwt/jg/gallery/tile_caption/hover=layla',
+            array($this, 'get_caption_html'),
+            10,
+            2
+        );
+        if ( !dgwt_freemius()->is_premium() ) {
+            add_action( 'wp_footer', array($this, 'add_css_style'), 95 );
+            add_action( 'admin_footer', array($this, 'add_css_style'), 95 );
         }
-        
         if ( is_admin() ) {
-            new DGWT_JG_Layla_Admin( $this->assets_url );
+            new DGWT_JG_Layla_Admin($this->assets_url);
         }
     }
-    
+
     /**
      * Prepare caption html
      *
@@ -47,18 +39,15 @@ class DGWT_JG_TilesStyle_Layla extends DGWT_JG_TilesStyle
      *
      * @return null
      */
-    public function get_caption_html( $caption, $attachment )
-    {
+    public function get_caption_html( $caption, $attachment ) {
         $label = trim( DGWT_JG_Helpers::get_image_caption( $attachment ) );
         if ( !dgwt_freemius()->is_premium() ) {
-            
-            if ( empty($label) ) {
+            if ( empty( $label ) ) {
                 $label = file_get_contents( DGWT_JG_DIR . 'assets/img/plus-29.svg' );
                 $caption_class = 'dgwt-jg-caption__icon';
             } else {
                 $caption_class = 'dgwt-jg-caption__font--10';
             }
-        
         }
         $caption = '';
         $caption .= '<figcaption class="dgwt-jg-caption">';
@@ -66,9 +55,8 @@ class DGWT_JG_TilesStyle_Layla extends DGWT_JG_TilesStyle
         $caption .= '</figcaption>';
         return $caption;
     }
-    
-    public function add_css_style()
-    {
+
+    public function add_css_style() {
         if ( !$this->can_load() ) {
             return;
         }
@@ -98,14 +86,13 @@ class DGWT_JG_TilesStyle_Layla extends DGWT_JG_TilesStyle
 		</style>
 		<?php 
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo  DGWT_JG_Helpers::minify_css( ob_get_clean() ) ;
+        echo DGWT_JG_Helpers::minify_css( ob_get_clean() );
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function css_style()
-    {
+    public function css_style() {
         if ( !$this->can_load() ) {
             return;
         }

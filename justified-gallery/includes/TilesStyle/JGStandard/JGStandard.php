@@ -7,33 +7,27 @@ if ( !defined( 'ABSPATH' ) ) {
 /**
  * Tiles style: JG Standard
  */
-class DGWT_JG_TilesStyle_JGStandard extends DGWT_JG_TilesStyle
-{
-    public  $slug = 'JGStandard' ;
-    public function __construct()
-    {
+class DGWT_JG_TilesStyle_JGStandard extends DGWT_JG_TilesStyle {
+    public $slug = 'JGStandard';
+
+    public function __construct() {
         parent::__construct();
         $this->init();
     }
-    
-    private function init()
-    {
-        
-        if ( !DGWT_JG()->detector->isMobile() && !DGWT_JG()->detector->isTablet() ) {
-            add_filter(
-                'dgwt/jg/gallery/tile_caption/hover=standard',
-                array( $this, 'get_caption_html' ),
-                10,
-                2
-            );
-            add_action( 'dgwt/jg/js/gallery/complete', array( $this, 'on_gallery_complete' ) );
-        }
-        
+
+    private function init() {
+        add_filter(
+            'dgwt/jg/gallery/tile_caption/hover=standard',
+            array($this, 'get_caption_html'),
+            10,
+            2
+        );
+        add_action( 'dgwt/jg/js/gallery/complete', array($this, 'on_gallery_complete') );
         if ( is_admin() ) {
-            new DGWT_JG_JGStandard_Admin( $this->assets_url );
+            new DGWT_JG_JGStandard_Admin($this->assets_url);
         }
     }
-    
+
     /**
      * Prepare caption html
      *
@@ -42,10 +36,9 @@ class DGWT_JG_TilesStyle_JGStandard extends DGWT_JG_TilesStyle
      *
      * @return null
      */
-    public function get_caption_html( $caption, $attachment )
-    {
-        $label = ( !empty($attachment->post_excerpt) ? wp_strip_all_tags( wptexturize( $attachment->post_excerpt ) ) : '' );
-        if ( empty($label) || DGWT_JG()->settings->get_opt( 'description' ) !== 'show' ) {
+    public function get_caption_html( $caption, $attachment ) {
+        $label = ( !empty( $attachment->post_excerpt ) ? wp_strip_all_tags( wptexturize( $attachment->post_excerpt ) ) : '' );
+        if ( empty( $label ) || DGWT_JG()->settings->get_opt( 'description' ) !== 'show' ) {
             $label = DGWT_JG_Helpers::get_loupe_svg();
         }
         $font_suffix = '14';
@@ -54,12 +47,11 @@ class DGWT_JG_TilesStyle_JGStandard extends DGWT_JG_TilesStyle
         $caption .= '</figcaption>';
         return $caption;
     }
-    
+
     /**
      * Print JS on gallery complete event
      */
-    public function on_gallery_complete()
-    {
+    public function on_gallery_complete() {
         if ( !$this->can_load() ) {
             return;
         }
@@ -68,6 +60,12 @@ class DGWT_JG_TilesStyle_JGStandard extends DGWT_JG_TilesStyle
 		<script>
 			( function ($) {
 				$(document).on('jg.complete-callback', function () {
+					<?php 
+        // Break early if touch device.
+        ?>
+					if (("ontouchstart" in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0)) {
+						return;
+					}
 					var $standardItems = $('.dgwt-jg-effect-standard .dgwt-jg-item');
 
 					if ($standardItems.length > 0) {
@@ -107,15 +105,14 @@ class DGWT_JG_TilesStyle_JGStandard extends DGWT_JG_TilesStyle
 			}(jQuery));
 		</script>
 		<?php 
-        $script = str_replace( array( '<script>', '</script>' ), array( '', '' ), DGWT_JG_Helpers::minify_js( ob_get_clean() ) );
+        $script = str_replace( array('<script>', '</script>'), array('', ''), DGWT_JG_Helpers::minify_js( ob_get_clean() ) );
         wp_add_inline_script( 'dgwt-justified-gallery', $script );
     }
-    
+
     /**
      * @inheritdoc
      */
-    public function css_style()
-    {
+    public function css_style() {
         if ( !$this->can_load() ) {
             return;
         }

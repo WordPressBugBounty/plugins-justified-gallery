@@ -136,3 +136,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+@media (pointer: coarse) {
+	.dgwt-jg-effect-layla .dgwt-jg-item .dgwt-jg-caption {
+		display: none !important;
+	}
+	.dgwt-jg-effect-layla .dgwt-jg-item img {
+		opacity: 1 !important;
+	}
+}

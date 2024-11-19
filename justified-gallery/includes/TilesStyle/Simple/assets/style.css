@@ -112,3 +112,9 @@
 	font-size: 24pt;
 	letter-spacing: 8px;
 }
+
+@media (pointer: coarse) {
+	.dgwt-jg-effect-simple .dgwt-jg-item .dgwt-jg-caption {
+		display: none !important;
+	}
+}

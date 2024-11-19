@@ -96,9 +96,14 @@ const Edit = ( props ) => {
 
 	const createPreviewURL = () => {
 		let url = window.dgwtJgGutenBlock.previewURL;
+		let previewLimit = false;
 
 		if ( images.length > 0 ) {
 			images.forEach( function ( image, i ) {
+				if (window.dgwtJgGutenBlock.previewLimit > 0 && i >= window.dgwtJgGutenBlock.previewLimit) {
+					previewLimit = true;
+					return;
+				}
 				url += `&${ encodeURIComponent( 'id[' + i + ']' ) }=${ image }`;
 			} );
 		}
@@ -125,6 +130,10 @@ const Edit = ( props ) => {
 
 		if ( maxRowHeight.length > 0 ) {
 			url += `&maxrowheight=${ maxRowHeight.replace( 'px', '' ) }`;
+		}
+
+		if ( previewLimit ) {
+			url += '&previewLimit=1';
 		}
 
 		return url;
@@ -257,6 +266,7 @@ const Edit = ( props ) => {
 								label: __( 'Layla', 'justified-gallery' ),
 							},
 						] }
+						__nextHasNoMarginBottom
 					/>
 					<SelectControl
 						label={ __( 'Lightbox type', 'justified-gallery' ) }
@@ -288,6 +298,7 @@ const Edit = ( props ) => {
 								label: __( 'Photoswipe', 'justified-gallery' ),
 							},
 						] }
+						__nextHasNoMarginBottom
 					/>
 					{ lightbox === 'none' ? (
 						<SelectControl
@@ -316,6 +327,7 @@ const Edit = ( props ) => {
 									label: __( 'None', 'justified-gallery' ),
 								},
 							] }
+							__nextHasNoMarginBottom
 						/>
 					) : null }
 					<SelectControl
@@ -356,6 +368,7 @@ const Edit = ( props ) => {
 								label: __( 'Hide', 'justified-gallery' ),
 							},
 						] }
+						__nextHasNoMarginBottom
 					/>
 					<BaseControl
 						label={ __( 'Margin', 'justified-gallery' ) }
@@ -364,6 +377,7 @@ const Edit = ( props ) => {
 							'justified-gallery'
 						) }
 						id="dgwt-jg-margin"
+						__nextHasNoMarginBottom
 					>
 						<UnitControl
 							id="dgwt-jg-margin"
@@ -385,6 +399,7 @@ const Edit = ( props ) => {
 							'justified-gallery'
 						) }
 						id="dgwt-jg-rowheight"
+						__nextHasNoMarginBottom
 					>
 						<UnitControl
 							id="dgwt-jg-rowheight"
@@ -402,6 +417,7 @@ const Edit = ( props ) => {
 							'justified-gallery'
 						) }
 						id="dgwt-jg-maxrowheight"
+						__nextHasNoMarginBottom
 					>
 						<UnitControl
 							id="dgwt-jg-maxrowheight"
