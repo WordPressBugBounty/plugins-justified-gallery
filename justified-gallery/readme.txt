@@ -4,7 +4,7 @@ Tags: best gallery plugin, wordpress gallery, justified gallery, gallery grid, g
 Requires at least: 4.6
 Tested up to: 6.7
 Requires PHP: 5.4
-Stable tag: 1.9.0
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,9 @@ If you are eg a **photographer** and publish **large galleries (+50 photos per p
 3. Settings page of Justified Gallery
 
 == Changelog ==
+
+= 1.10.0, January 27, 2025 =
+* UPDATE: Freemius SDK
 
 = 1.9.0, November 18, 2024 =
 * ADD: Ability to set background and text color in the gallery preview

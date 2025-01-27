@@ -3,7 +3,7 @@
  * Plugin Name: Justified Gallery
  * Plugin URI: https://wordpress.org/plugins/justified-gallery
  * Description: Display native WordPress galleries in a responsive justified image grid and a pretty Lightbox.
- * Version: 1.9.0
+ * Version: 1.10.0
  * Author: Mateusz Czardybon
  * Author URI: https://czarsoft.pl/
  * Text Domain: justified-gallery
@@ -92,7 +92,7 @@ if ( ! function_exists( 'dgwt_freemius' ) ) {
 			 * Setup plugin constants
 			 */
 			private function constants() {
-				define( 'DGWT_JG_VERSION', '1.9.0' );
+				define( 'DGWT_JG_VERSION', '1.10.0' );
 				define( 'DGWT_JG_NAME', 'Justified Gallery' );
 				define( 'DGWT_JG_FILE', __FILE__ );
 				define( 'DGWT_JG_DIR', plugin_dir_path( __FILE__ ) );
